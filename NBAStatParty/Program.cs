@@ -1,8 +1,13 @@
+using NBAStatParty.Interfaces;
+using NBAStatParty.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddSingleton<INBAApiService, NBAApiService>();
+builder.Services.AddHttpClient("NBAAPI", c => c.BaseAddress = new Uri("http://api.sportradar.us"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
