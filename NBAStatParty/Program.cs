@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using NBAStatParty.DataAccess;
 using NBAStatParty.Interfaces;
 using NBAStatParty.Services;
 
@@ -8,6 +10,12 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<INBAApiService, NBAApiService>();
 builder.Services.AddHttpClient("NBAAPI", c => c.BaseAddress = new Uri("http://api.sportradar.us"));
+
+builder.Services.AddDbContext<NBAContext>(options =>
+    options
+        .UseNpgsql(builder.Configuration["NBAStatPartyDBCONNECTIONSTRING"])
+        .UseSnakeCaseNamingConvention()
+);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
