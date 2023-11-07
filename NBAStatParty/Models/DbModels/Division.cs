@@ -1,4 +1,5 @@
-﻿using NBAStatParty.Models.SR_Standings;
+﻿
+using NBAStatParty.Models.SR_Standings;
 
 namespace NBAStatParty.Models.DbModels
 {
@@ -7,7 +8,25 @@ namespace NBAStatParty.Models.DbModels
         public string Id { get; set; }
         public string Name { get; set; }
         public string Alias { get; set; }
-        public List<Team> Teams { get; set; }
+        public List<Team> Teams { get; set; } = new List<Team>();
         public Conference Conference { get; set; }
+
+        public Division()
+        {
+
+        }
+
+        public Division(StandingsDivision input)
+        {
+            Id = input.Id;
+            Name = input.Id;
+            Alias = input.Alias;
+
+            foreach(var team in input.Teams)
+            {
+                var newTeam = new Team(team);
+                Teams.Add(newTeam);
+            }
+        }
     }
 }
