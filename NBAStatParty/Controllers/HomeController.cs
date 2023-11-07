@@ -73,7 +73,6 @@ namespace NBAStatParty.Controllers
                     team.Seasons.Add(new TeamSeason(season, standingsTeam));
                     _context.Teams.Update(team);
                 }
-                Console.WriteLine("pause");
                 await Task.Delay(1100);
             }
             _context.SaveChanges();
