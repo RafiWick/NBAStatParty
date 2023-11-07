@@ -19,7 +19,7 @@ namespace NBAStatParty.Models.DbModels
         public Division(StandingsDivision input)
         {
             Id = input.Id;
-            Name = input.Id;
+            Name = input.Name;
             Alias = input.Alias;
 
             foreach(var team in input.Teams)
