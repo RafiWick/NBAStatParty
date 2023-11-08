@@ -86,7 +86,7 @@
         for (const team of division.teams) {
             var tm = document.createElement("a")
             tm.innerText = team.market + " " + team.name
-            tm.setAttribute('href', '/teams/' + team.id)
+            tm.setAttribute('href', '/teams/?id=' + team.id)
             teamMenu.appendChild(tm);
         }
     }

@@ -8,6 +8,7 @@ namespace NBAStatParty.Models.DbModels
         public string TeamId { get; set; }
         public string SeasonId { get; set; }
 
+        public int Year { get; set; }
         public int Wins { get; set; }
         public int Losses { get; set; }
         public float WinPct { get; set; }
@@ -28,6 +29,7 @@ namespace NBAStatParty.Models.DbModels
         {
             SeasonId = season.Id;
 
+            Year = season.Year;
             Wins = input.Wins;
             Losses = input.Losses;
             WinPct = input.Win_Pct;
