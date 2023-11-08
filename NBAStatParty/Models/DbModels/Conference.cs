@@ -8,7 +8,7 @@ namespace NBAStatParty.Models.DbModels
         public string Name { get; set; }
         public string Alias { get; set; }
         public List<Division> Divisions { get; set; } = new List<Division>();
-        public League League { get; set; }
+        public string LeagueId { get; set; }
 
         public Conference()
         {

@@ -5,8 +5,8 @@ namespace NBAStatParty.Models.DbModels
     public class TeamSeason
     {
         public int Id { get; set; }
-        public Team Team { get; set; }
-        public Season Season { get; set; }
+        public string TeamId { get; set; }
+        public string SeasonId { get; set; }
 
         public int Wins { get; set; }
         public int Losses { get; set; }
@@ -26,7 +26,7 @@ namespace NBAStatParty.Models.DbModels
 
         public TeamSeason(Season season, StandingsTeam input)
         {
-            Season = season;
+            SeasonId = season.Id;
 
             Wins = input.Wins;
             Losses = input.Losses;

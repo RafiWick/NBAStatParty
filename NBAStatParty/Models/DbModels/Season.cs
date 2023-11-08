@@ -7,7 +7,7 @@ namespace NBAStatParty.Models.DbModels
         public string Id { get; set; }
         public int Year { get; set; }
         public string Type { get; set; }
-        public League League { get; set; }
+        public string LeagueId { get; set; }
 
         public Season()
         {

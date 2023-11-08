@@ -8,7 +8,7 @@ namespace NBAStatParty.Models.DbModels
         public string Name { get; set; }
         public string Market { get; set; }
         public List<TeamSeason> Seasons { get; set; } = new List<TeamSeason>();
-        public Division Division { get; set; }
+        public string DivisionId { get; set; }
 
         public Team()
         {

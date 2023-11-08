@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NBAStatParty.DataAccess;
 using NBAStatParty.Interfaces;
 using NBAStatParty.Models;
@@ -31,10 +32,11 @@ namespace NBAStatParty.Controllers
             if (!_context.Leagues.Any(l => l.Name == "NBA"))
             {
                 league = await CreateNBATeams();
+                await Task.Delay(1100);
                 await FillNBATeamSeasons(league);
             }
-
-            return View();
+            var leagues = _context.Leagues.Include(l => l.Conferences).ThenInclude(c => c.Divisions).ThenInclude(d => d.Teams).ToList();
+            return View(leagues);
         }
 
 
