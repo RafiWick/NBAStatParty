@@ -1,4 +1,5 @@
-﻿using NBAStatParty.Models.SR_Standings;
+﻿using NBAStatParty.DataAccess;
+using NBAStatParty.Interfaces;
 
 namespace NBAStatParty.Models.DbModels
 {
@@ -15,17 +16,22 @@ namespace NBAStatParty.Models.DbModels
 
         }
 
-        public Conference(StandingsConference conference)
+        public Conference(SR_Standings.Conference conference)
         {
             Id = conference.Id;
             Name = conference.Name;
             Alias = conference.Alias;
+        }
 
-            foreach(var division in conference.Divisions)
+        public static async Task<Conference> CreateAsync(SR_Standings.Conference input, INBAApiService _NBAApiService, string apiKey, NBAContext context)
+        {
+            Conference conference = new Conference(input);
+            foreach (var division in input.Divisions)
             {
-                var newDivision = new Division(division);
-                Divisions.Add(newDivision);
+                var newDivision = await Division.CreateAsync(division, _NBAApiService, apiKey, context);
+                conference.Divisions.Add(newDivision);
             }
+            return conference;
         }
     }
 }

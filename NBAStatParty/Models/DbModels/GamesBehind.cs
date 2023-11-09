@@ -1,6 +1,4 @@
-﻿using NBAStatParty.Models.SR_Standings;
-
-namespace NBAStatParty.Models.DbModels
+﻿namespace NBAStatParty.Models.DbModels
 {
     public class GamesBehind
     {
@@ -15,7 +13,7 @@ namespace NBAStatParty.Models.DbModels
 
         }
 
-        public GamesBehind(StandingsGamesBehind input)
+        public GamesBehind(SR_Standings.GamesBehind input)
         {
             League = input.League;
             Conference = input.Conference;

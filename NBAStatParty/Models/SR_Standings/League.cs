@@ -1,6 +1,6 @@
 ﻿namespace NBAStatParty.Models.SR_Standings
 {
-    public class StandingsLeague
+    public class League
     {
         public string Id { get; set; }
         public string Name { get; set; }

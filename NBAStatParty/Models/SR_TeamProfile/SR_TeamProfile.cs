@@ -3,6 +3,8 @@
     public class SR_TeamProfile
     {
         public string Id { get; set; }
+        public string Name { get; set; }
+        public string Market { get; set; }
         public string Alias { get; set; }
         public int Founded { get; set; }
         public Venue Venue { get; set; }

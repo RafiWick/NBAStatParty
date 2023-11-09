@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NBAStatParty.DataAccess;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NBAStatParty.Migrations
 {
     [DbContext(typeof(NBAContext))]
-    partial class NBAContextModelSnapshot : ModelSnapshot
+    [Migration("20231109220208_players")]
+    partial class players
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Experience")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("experience");
 
@@ -57,12 +61,12 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("team_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_coaches");
+                        .HasName("pk_coach");
 
                     b.HasIndex("TeamId")
-                        .HasDatabaseName("ix_coaches_team_id");
+                        .HasDatabaseName("ix_coach_team_id");
 
-                    b.ToTable("coaches", (string)null);
+                    b.ToTable("coach", (string)null);
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.Color", b =>
@@ -93,15 +97,15 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("type");
 
                     b.HasKey("Id")
-                        .HasName("pk_colors");
+                        .HasName("pk_color");
 
                     b.HasIndex("RGBId")
-                        .HasDatabaseName("ix_colors_rgb_id");
+                        .HasDatabaseName("ix_color_rgb_id");
 
                     b.HasIndex("TeamId")
-                        .HasDatabaseName("ix_colors_team_id");
+                        .HasDatabaseName("ix_color_team_id");
 
-                    b.ToTable("colors", (string)null);
+                    b.ToTable("color", (string)null);
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.Conference", b =>
@@ -233,9 +237,9 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("lng");
 
                     b.HasKey("Id")
-                        .HasName("pk_locations");
+                        .HasName("pk_location");
 
-                    b.ToTable("locations", (string)null);
+                    b.ToTable("location", (string)null);
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.Player", b =>
@@ -260,6 +264,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("birthdate");
 
                     b.Property<string>("College")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("college");
 
@@ -287,6 +292,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("height");
 
                     b.Property<string>("HighSchool")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("high_school");
 
@@ -328,15 +334,15 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("weight");
 
                     b.HasKey("Id")
-                        .HasName("pk_players");
+                        .HasName("pk_player");
 
                     b.HasIndex("DraftId")
-                        .HasDatabaseName("ix_players_draft_id");
+                        .HasDatabaseName("ix_player_draft_id");
 
                     b.HasIndex("TeamId")
-                        .HasDatabaseName("ix_players_team_id");
+                        .HasDatabaseName("ix_player_team_id");
 
-                    b.ToTable("players", (string)null);
+                    b.ToTable("player", (string)null);
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.PlayerDraft", b =>
@@ -349,14 +355,17 @@ namespace NBAStatParty.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Pick")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("pick");
 
                     b.Property<string>("Round")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("round");
 
                     b.Property<string>("TeamId")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("team_id");
 
@@ -365,9 +374,9 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("year");
 
                     b.HasKey("Id")
-                        .HasName("pk_player_drafts");
+                        .HasName("pk_player_draft");
 
-                    b.ToTable("player_drafts", (string)null);
+                    b.ToTable("player_draft", (string)null);
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.RGB", b =>
@@ -392,9 +401,9 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("r");
 
                     b.HasKey("Id")
-                        .HasName("pk_rg_bs");
+                        .HasName("pk_rgb");
 
-                    b.ToTable("rg_bs", (string)null);
+                    b.ToTable("rgb", (string)null);
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.Rank", b =>
@@ -480,12 +489,12 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("year");
 
                     b.HasKey("Id")
-                        .HasName("pk_seasons");
+                        .HasName("pk_season");
 
                     b.HasIndex("LeagueId")
-                        .HasDatabaseName("ix_seasons_league_id");
+                        .HasDatabaseName("ix_season_league_id");
 
-                    b.ToTable("seasons", (string)null);
+                    b.ToTable("season", (string)null);
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.Team", b =>
@@ -534,7 +543,6 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("name");
 
                     b.Property<string>("VenueId")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("venue_id");
 
@@ -665,12 +673,12 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("zip");
 
                     b.HasKey("Id")
-                        .HasName("pk_venues");
+                        .HasName("pk_venue");
 
                     b.HasIndex("LocationId")
-                        .HasDatabaseName("ix_venues_location_id");
+                        .HasDatabaseName("ix_venue_location_id");
 
-                    b.ToTable("venues", (string)null);
+                    b.ToTable("venue", (string)null);
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.Coach", b =>
@@ -678,7 +686,7 @@ namespace NBAStatParty.Migrations
                     b.HasOne("NBAStatParty.Models.DbModels.Team", null)
                         .WithMany("Coaches")
                         .HasForeignKey("TeamId")
-                        .HasConstraintName("fk_coaches_teams_team_id");
+                        .HasConstraintName("fk_coach_teams_team_id");
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.Color", b =>
@@ -688,12 +696,12 @@ namespace NBAStatParty.Migrations
                         .HasForeignKey("RGBId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_colors_rg_bs_rgb_id");
+                        .HasConstraintName("fk_color_rgb_rgb_id");
 
                     b.HasOne("NBAStatParty.Models.DbModels.Team", null)
                         .WithMany("Colors")
                         .HasForeignKey("TeamId")
-                        .HasConstraintName("fk_colors_teams_team_id");
+                        .HasConstraintName("fk_color_teams_team_id");
 
                     b.Navigation("RGB");
                 });
@@ -725,12 +733,12 @@ namespace NBAStatParty.Migrations
                         .HasForeignKey("DraftId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_players_player_drafts_draft_id");
+                        .HasConstraintName("fk_player_player_draft_draft_id");
 
                     b.HasOne("NBAStatParty.Models.DbModels.Team", null)
                         .WithMany("Roster")
                         .HasForeignKey("TeamId")
-                        .HasConstraintName("fk_players_teams_team_id");
+                        .HasConstraintName("fk_player_teams_team_id");
 
                     b.Navigation("Draft");
                 });
@@ -750,7 +758,7 @@ namespace NBAStatParty.Migrations
                         .HasForeignKey("LeagueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_seasons_leagues_league_id");
+                        .HasConstraintName("fk_season_leagues_league_id");
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.Team", b =>
@@ -762,12 +770,12 @@ namespace NBAStatParty.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_teams_divisions_division_id");
 
-                    b.HasOne("NBAStatParty.Models.DbModels.Venue", null)
-                        .WithMany("Teams")
+                    b.HasOne("NBAStatParty.Models.DbModels.Venue", "Venue")
+                        .WithMany()
                         .HasForeignKey("VenueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_teams_venues_venue_id");
+                        .HasConstraintName("fk_teams_venue_venue_id");
+
+                    b.Navigation("Venue");
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.TeamSeason", b =>
@@ -805,7 +813,7 @@ namespace NBAStatParty.Migrations
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_venues_locations_location_id");
+                        .HasConstraintName("fk_venue_location_location_id");
 
                     b.Navigation("Location");
                 });
@@ -841,11 +849,6 @@ namespace NBAStatParty.Migrations
             modelBuilder.Entity("NBAStatParty.Models.DbModels.TeamSeason", b =>
                 {
                     b.Navigation("Records");
-                });
-
-            modelBuilder.Entity("NBAStatParty.Models.DbModels.Venue", b =>
-                {
-                    b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618
         }

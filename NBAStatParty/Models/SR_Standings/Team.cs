@@ -1,6 +1,6 @@
 ﻿namespace NBAStatParty.Models.SR_Standings
 {
-    public class StandingsTeam
+    public class Team
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -12,8 +12,8 @@
         public float Points_For { get; set; }
         public float Points_Against { get; set; }
         public float Point_Diff { get; set; }
-        public StandingsGamesBehind Games_Behind { get; set; }
-        public StandingsRank Calc_Rank { get; set; }
-        public List<StandingsRecord> Records { get; set; }
+        public GamesBehind Games_Behind { get; set; }
+        public Rank Calc_Rank { get; set; }
+        public List<Record> Records { get; set; }
     }
 }

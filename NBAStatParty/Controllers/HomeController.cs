@@ -4,7 +4,6 @@ using NBAStatParty.DataAccess;
 using NBAStatParty.Interfaces;
 using NBAStatParty.Models;
 using NBAStatParty.Models.DbModels;
-using NBAStatParty.Models.SR_Standings;
 using System.Diagnostics;
 
 namespace NBAStatParty.Controllers
@@ -28,13 +27,13 @@ namespace NBAStatParty.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var league = new League();
-            if (!_context.Leagues.Any(l => l.Name == "NBA"))
+            if (!_context.Leagues.Any(l => l.Id == "4353138d-4c22-4396-95d8-5f587d2df25c"))
             {
-                league = await CreateNBATeams();
+                var nba = await CreateNBATeams();
                 await Task.Delay(1100);
-                await FillNBATeamSeasons(league);
+                await FillNBATeamSeasons(nba);
             }
+
             var leagues = _context.Leagues.Include(l => l.Conferences).ThenInclude(c => c.Divisions).ThenInclude(d => d.Teams).ToList();
             return View(leagues);
         }
@@ -44,7 +43,7 @@ namespace NBAStatParty.Controllers
         {
             string apiKey = _configuration["NBA_SPORTRADAR_APIKEY"];
             var result = await _NBAApiService.GetStandings(2022, apiKey);
-            var league = new League(result);
+            var league = await League.CreateAsync(result, _NBAApiService, apiKey, _context);
             _context.Leagues.Add(league);
             _context.SaveChanges();
 
@@ -60,7 +59,7 @@ namespace NBAStatParty.Controllers
                 var result = await _NBAApiService.GetStandings(year, apiKey);
                 var season = new Season(result.Season);
                 league.Seasons.Add(season);
-                var standingsTeams = new List<StandingsTeam>();
+                var standingsTeams = new List<Models.SR_Standings.Team>();
                 foreach(var conference in result.Conferences)
                 {
                     foreach(var division in conference.Divisions)

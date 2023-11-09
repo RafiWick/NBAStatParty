@@ -1,11 +1,10 @@
-﻿using NBAStatParty.Models.SR_Standings;
-
+﻿
 namespace NBAStatParty.Models.DbModels
 {
     public class Record
     {
         public int Id { get; set; }
-        public string RecordType { get; set; }
+        public string Type { get; set; }
         public int Wins { get; set; }
         public int Losses { get; set; }
         public float WinPct { get; set; }
@@ -15,9 +14,9 @@ namespace NBAStatParty.Models.DbModels
 
         }
 
-        public Record(StandingsRecord input)
+        public Record(SR_Standings.Record input)
         {
-            RecordType = input.Record_Type;
+            Type = input.Record_Type;
             Wins = input.Wins;
             Losses = input.Losses;
             WinPct = input.Win_Pct;

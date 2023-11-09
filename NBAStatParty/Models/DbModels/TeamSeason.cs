@@ -1,6 +1,4 @@
-﻿using NBAStatParty.Models.SR_Standings;
-
-namespace NBAStatParty.Models.DbModels
+﻿namespace NBAStatParty.Models.DbModels
 {
     public class TeamSeason
     {
@@ -25,7 +23,7 @@ namespace NBAStatParty.Models.DbModels
 
         }
 
-        public TeamSeason(Season season, StandingsTeam input)
+        public TeamSeason(Season season, SR_Standings.Team input)
         {
             SeasonId = season.Id;
 

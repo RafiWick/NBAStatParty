@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NBAStatParty.DataAccess;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NBAStatParty.Migrations
 {
     [DbContext(typeof(NBAContext))]
-    partial class NBAContextModelSnapshot : ModelSnapshot
+    [Migration("20231109221030_players2")]
+    partial class players2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Experience")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("experience");
 
@@ -260,6 +264,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("birthdate");
 
                     b.Property<string>("College")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("college");
 
@@ -287,6 +292,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("height");
 
                     b.Property<string>("HighSchool")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("high_school");
 
@@ -349,14 +355,17 @@ namespace NBAStatParty.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Pick")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("pick");
 
                     b.Property<string>("Round")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("round");
 
                     b.Property<string>("TeamId")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("team_id");
 
@@ -534,7 +543,6 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("name");
 
                     b.Property<string>("VenueId")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("venue_id");
 
@@ -762,12 +770,12 @@ namespace NBAStatParty.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_teams_divisions_division_id");
 
-                    b.HasOne("NBAStatParty.Models.DbModels.Venue", null)
-                        .WithMany("Teams")
+                    b.HasOne("NBAStatParty.Models.DbModels.Venue", "Venue")
+                        .WithMany()
                         .HasForeignKey("VenueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_teams_venues_venue_id");
+
+                    b.Navigation("Venue");
                 });
 
             modelBuilder.Entity("NBAStatParty.Models.DbModels.TeamSeason", b =>
@@ -841,11 +849,6 @@ namespace NBAStatParty.Migrations
             modelBuilder.Entity("NBAStatParty.Models.DbModels.TeamSeason", b =>
                 {
                     b.Navigation("Records");
-                });
-
-            modelBuilder.Entity("NBAStatParty.Models.DbModels.Venue", b =>
-                {
-                    b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618
         }

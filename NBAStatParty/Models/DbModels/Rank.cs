@@ -1,6 +1,4 @@
-﻿using NBAStatParty.Models.SR_Standings;
-
-namespace NBAStatParty.Models.DbModels
+﻿namespace NBAStatParty.Models.DbModels
 {
     public class Rank
     {
@@ -13,7 +11,7 @@ namespace NBAStatParty.Models.DbModels
 
         }
 
-        public Rank(StandingsRank input)
+        public Rank(SR_Standings.Rank input)
         {
             DivRank = input.Div_Rank;
             ConfRank = input.Conf_Rank;

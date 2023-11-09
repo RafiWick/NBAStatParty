@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NBAStatParty.DataAccess;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NBAStatParty.Migrations
 {
     [DbContext(typeof(NBAContext))]
-    partial class NBAContextModelSnapshot : ModelSnapshot
+    [Migration("20231109230101_undraftedPlayers")]
+    partial class undraftedPlayers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Experience")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("experience");
 
@@ -260,6 +264,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("birthdate");
 
                     b.Property<string>("College")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("college");
 
@@ -287,6 +292,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("height");
 
                     b.Property<string>("HighSchool")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("high_school");
 
