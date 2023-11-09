@@ -1,8 +1,123 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using NBAStatParty.Models.DbModels;
+@using Newtonsoft.Json;
+@model List<League>
+@{
+    List<Conference> conferences = Model.SelectMany(l => l.Conferences).ToList() as List<Conference>;
+    List<Division> divisions = conferences.SelectMany(c => c.Divisions).ToList() as List<Division>;
+
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<script>
+    function selectLeague(id) {
+        
+        var model = @Html.Raw(Json.Serialize(Model));
+        const league = model.find(l => l.id === id)
+        var leagueButton = document.getElementById("League");
+        leagueButton.innerText = league.alias;
+
+        
+
+        var conferenceMenu = document.getElementById("Conferences")
+
+        while(conferenceMenu.firstChild){
+            conferenceMenu.removeChild(conferenceMenu.firstChild)
+        }
+        var conferenceButton = document.getElementById("Conference");
+        conferenceButton.innerText = "Conference"
+
+        var divisionMenu = document.getElementById("Divisions")
+        while (divisionMenu.firstChild) {
+            divisionMenu.removeChild(divisionMenu.firstChild)
+        }
+        var divisionButton = document.getElementById("Division");
+        divisionButton.innerText = "Division"
+        var teamMenu = document.getElementById("Teams")
+
+        while (teamMenu.firstChild) {
+            teamMenu.removeChild(teamMenu.firstChild)
+        }
+
+        for(const conference of league.conferences){
+            var conf = document.createElement("a")
+            conf.innerText = conference.alias
+            conf.setAttribute('onclick', "selectConference('" + conference.id + "')")
+            conferenceMenu.appendChild(conf);
+        }
+    }
+
+    function selectConference(id) {
+        var conferences = @Html.Raw(Json.Serialize(conferences));
+        const conference = conferences.find(c => c.id === id)
+        
+        var conferenceButton = document.getElementById("Conference");
+        conferenceButton.innerText = conference.alias;
+        var divisionMenu = document.getElementById("Divisions")
+
+        while (divisionMenu.firstChild) {
+            divisionMenu.removeChild(divisionMenu.firstChild)
+        }
+        var divisionButton = document.getElementById("Division");
+        divisionButton.innerText = "Division"
+        var teamMenu = document.getElementById("Teams")
+
+        while (teamMenu.firstChild) {
+            teamMenu.removeChild(teamMenu.firstChild)
+        }
+        for (const division of conference.divisions) {
+            var div = document.createElement("a")
+            div.innerText = division.alias
+            div.setAttribute('onclick', "selectDivision('" + division.id + "')")
+            divisionMenu.appendChild(div);
+        }
+    }
+
+    function selectDivision(id) {
+        var divisions = @Html.Raw(Json.Serialize(divisions));
+        const division = divisions.find(d => d.id === id)
+
+        var divisionButton = document.getElementById("Division");
+        divisionButton.innerText = division.alias;
+        var teamMenu = document.getElementById("Teams")
+
+        while (teamMenu.firstChild) {
+            teamMenu.removeChild(teamMenu.firstChild)
+        }
+
+        for (const team of division.teams) {
+            var tm = document.createElement("a")
+            tm.innerText = team.market + " " + team.name
+            tm.setAttribute('href', '/teams/?id=' + team.id)
+            teamMenu.appendChild(tm);
+        }
+    }
+
+
+</script>
+
+
+<h1>NBA Stat Party</h1>
+<div class="dropdown">
+    <button class="dropbtn" id="League">League</button>
+    <div class="dropdown-content" id="Leagues">
+        @foreach(League league in Model)
+        {
+            <a onclick="selectLeague('@league.Id')">@league.Alias</a>
+        }
+    </div>
 </div>
+<div class="dropdown">
+    <button class="dropbtn" id="Conference">Conference</button>
+    <div class="dropdown-content" id="Conferences">
+    </div>
+</div>
+<div class="dropdown">
+    <button class="dropbtn" id="Division">Division</button>
+    <div class="dropdown-content" id="Divisions">
+    </div>
+</div>
+<div class="dropdown">
+    <button class="dropbtn" id="Team">Team</button>
+    <div class="dropdown-content" id="Teams">
+    </div>
+</div>
+
