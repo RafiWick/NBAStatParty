@@ -3,6 +3,9 @@
 @{
     string backgroundColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Hex as string;
     string textColor = Model.Colors.FirstOrDefault(c => c.Type == "secondary").Hex as string;
+    string tableUpColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Up() as string;
+    string tableDownColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Down() as string;
+
 }
 <script>
     function setBackground(color){
@@ -10,7 +13,27 @@
     }
     setBackground('@backgroundColor')
 </script>
+<style>
+    table {
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+        border: 3px solid @tableDownColor;
+    }
 
+    tbody tr:nth-child(odd) {
+        background-color: @tableUpColor;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: @tableDownColor;
+    }
+
+    th,
+    td {
+        padding: 20px;
+    }
+</style>
 <h1 style="color: @textColor">@Model.Market @Model.Name</h1>
 <table>
 
