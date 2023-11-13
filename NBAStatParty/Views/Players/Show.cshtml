@@ -1,0 +1,41 @@
+﻿@using NBAStatParty.Models.DbModels;
+@{
+    string currentTeam = ViewData["CurrentTeam"] as string;
+    string? draftedBy = ViewData["DraftedBy"] as string;
+    string backgroundColor = ViewData["BackgroundColor"] as string;
+    string textColor = ViewData["TextColor"] as string;
+}
+@model Player
+<script>
+    function setBackground(color) {
+        document.body.style.backgroundColor = color;
+    }
+    setBackground('@backgroundColor')
+</script>
+
+<h1 style="color: @textColor">@Model.FirstName</h1>
+<h1 style="color: @textColor">@Model.LastName</h1>
+<h3 style="color: @textColor">@currentTeam | #@Model.Number | @Model.Position</h3>
+<h6 style="color: @textColor">@Model.HeightString(), @Model.Weight lbs</h6>
+<h6 style="color: @textColor">Birthdate: @Model.Birthdate</h6>
+@if(Model.College != null)
+{
+    <h6 style="color: @textColor">College: @Model.College</h6>
+}
+else if (Model.HighSchool != null)
+{
+    <h6 style="color: @textColor">HighSchool: @Model.HighSchool</h6>
+}
+else
+{
+    <h6 style="color: @textColor">Birth Place: @Model.BirthPlace</h6>
+}
+
+@if(draftedBy != null)
+{
+    <h7 style="color: @textColor">Drafted By @draftedBy in @Model.Draft.Year With Pick @Model.Draft.Pick in Round @Model.Draft.Round</h7>
+}
+else
+{
+    <h7 style="color: @textColor">Undrafted</h7>
+}

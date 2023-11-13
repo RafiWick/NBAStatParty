@@ -23,7 +23,8 @@ namespace NBAStatParty.Controllers
         [Route("/teams")]
         public IActionResult Show(string? id)
         {
-            var team = _context.Teams.Include(t => t.Seasons).ThenInclude(s => s.GamesBehind)
+            var team = _context.Teams.Include(t => t.Roster).Include(t => t.Colors)
+                .Include(t => t.Seasons).ThenInclude(s => s.GamesBehind)
                 .Include(t => t.Seasons).ThenInclude(s => s.Ranks)
                 .Include(t => t.Seasons).ThenInclude(s => s.Records)
                 .FirstOrDefault(t => t.Id == id);

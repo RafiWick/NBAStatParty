@@ -53,7 +53,7 @@ namespace NBAStatParty.Models.DbModels
             }
             foreach (var player in input.Players)
             {
-                Roster.Add(new Player(player));
+                Roster.Add(new Player(player, Id));
             }
         }
 

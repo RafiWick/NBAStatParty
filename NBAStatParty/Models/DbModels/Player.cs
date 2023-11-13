@@ -3,6 +3,7 @@
     public class Player
     {
         public string Id { get; set; }
+        public string TeamId { get; set; }
         public string Status { get; set; }
         public string FullName { get; set; }
         public string FirstName { get; set; }
@@ -26,9 +27,10 @@
 
         }
 
-        public Player(SR_TeamProfile.Player input)
+        public Player(SR_TeamProfile.Player input, string teamId)
         {
             Id = input.Id;
+            TeamId = teamId;
             Status = input.Status;
             FullName = input.Full_Name;
             FirstName = input.First_Name;
@@ -53,5 +55,9 @@
 
         }
 
+        public string HeightString()
+        {
+            return $"{Height/12}' {Height%12}\"";
+        }
 }
 }

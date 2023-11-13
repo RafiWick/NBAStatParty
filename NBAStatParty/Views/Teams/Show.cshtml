@@ -1,23 +1,34 @@
 ﻿@using NBAStatParty.Models.DbModels;
 @model Team;
-<h1>@Model.Market @Model.Name</h1>
+@{
+    string backgroundColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Hex as string;
+    string textColor = Model.Colors.FirstOrDefault(c => c.Type == "secondary").Hex as string;
+}
+<script>
+    function setBackground(color){
+        document.body.style.backgroundColor = color;
+    }
+    setBackground('@backgroundColor')
+</script>
+
+<h1 style="color: @textColor">@Model.Market @Model.Name</h1>
 <table>
 
     <thead>
         <tr>
-            <th>YEAR</th>
-            <th> | W</th>
-            <th> | L</th>
-            <th> | Pct</th>
-            <th> | PPG</th>
-            <th> | OPP PPG</th>
-            <th> | DIFF</th>
-            <th> |DIV:</th>
-            <th>| RANK</th>
-            <th> | GB</th>
-            <th> |CONF:</th>
-            <th>| RANK</th>
-            <th> | GB</th>
+            <th style="color: @textColor">YEAR</th>
+            <th style="color: @textColor"> | W</th>
+            <th style="color: @textColor"> | L</th>
+            <th style="color: @textColor"> | Pct</th>
+            <th style="color: @textColor"> | PPG</th>
+            <th style="color: @textColor"> | OPP PPG</th>
+            <th style="color: @textColor"> | DIFF</th>
+            <th style="color: @textColor"> |DIV:</th>
+            <th style="color: @textColor">| RANK</th>
+            <th style="color: @textColor"> | GB</th>
+            <th style="color: @textColor"> |CONF:</th>
+            <th style="color: @textColor">| RANK</th>
+            <th style="color: @textColor"> | GB</th>
         </tr>
     </thead>
     <tbody>
@@ -25,21 +36,46 @@
         @foreach(var season in Model.Seasons.OrderByDescending(s => s.Year))
         {
             <tr>
-                <th>@season.Year</th>
-                <th> | @season.Wins</th>
-                <th> | @season.Losses</th>
-                <th> | @season.WinPct</th>
-                <th> | @season.PointsFor</th>
-                <th> | @season.PointsAgainst</th>
-                <th> | @season.PointDiff</th>
-                <th> |</th>
-                <th>| @season.Ranks.DivRank</th>
-                <th> | @season.GamesBehind.Division</th>
-                <th> |</th>
-                <th>| @season.Ranks.ConfRank</th>
-                <th> | @season.GamesBehind.Conference</th>
+                <th style="color: @textColor">@season.Year</th>
+                <th style="color: @textColor"> | @season.Wins</th>
+                <th style="color: @textColor"> | @season.Losses</th>
+                <th style="color: @textColor"> | @season.WinPct</th>
+                <th style="color: @textColor"> | @season.PointsFor</th>
+                <th style="color: @textColor"> | @season.PointsAgainst</th>
+                <th style="color: @textColor"> | @season.PointDiff</th>
+                <th style="color: @textColor"> |</th>
+                <th style="color: @textColor">| @season.Ranks.DivRank</th>
+                <th style="color: @textColor"> | @season.GamesBehind.Division</th>
+                <th style="color: @textColor"> |</th>
+                <th style="color: @textColor">| @season.Ranks.ConfRank</th>
+                <th style="color: @textColor"> | @season.GamesBehind.Conference</th>
             </tr>
         }
 
+    </tbody>
+</table>
+<br />
+<h3 style="color: @textColor">Roster</h3>
+<table>
+    <thead>
+        <tr>
+            <th style="color: @textColor">Name</th>
+            <th style="color: @textColor">Num</th>
+            <th style="color: @textColor">Pos</th>
+            <th style="color: @textColor">Exp</th>
+            <th style="color: @textColor">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var player in Model.Roster)
+        {
+            <tr>
+                <th style="color: @textColor"><a style="color: @textColor" href="/players/?id=@player.Id">@player.AbbrName</a></th>
+                <th style="color: @textColor">@player.Number</th>
+                <th style="color: @textColor">@player.Position</th>
+                <th style="color: @textColor">@player.Experience</th>
+                <th style="color: @textColor">@player.Status</th>
+            </tr>
+        }
     </tbody>
 </table>
