@@ -42,5 +42,12 @@ namespace NBAStatParty.Controllers
 
             return View(player);
         }
+        [Route("/players/search")]
+        public IActionResult Search(string Name)
+        {
+            ViewData["Search"] = Name;
+            var players = _context.Players.Where(p => p.FullName.ToLower().Contains(Name.ToLower())).ToList();
+            return View(players);
+        }
     }
 }
