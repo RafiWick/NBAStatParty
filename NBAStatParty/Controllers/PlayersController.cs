@@ -28,7 +28,7 @@ namespace NBAStatParty.Controllers
         public async Task<IActionResult> Show(string? id)
         {
             var player = _context.Players.Include(p => p.Draft).FirstOrDefault(p => p.Id == id);
-            var team = _context.Teams.Include(t => t.Colors).FirstOrDefault(t => t.Id == player.TeamId);
+            var team = _context.Teams.Include(t => t.Colors).ThenInclude(c => c.RGB).FirstOrDefault(t => t.Id == player.TeamId);
             var draftedBy = _context.Teams.Find(player.Draft.TeamId);
             var playerData = await _NBAApiService.GetPlayerProfile(id, _configuration["NBA_SPORTRADAR_APIKEY"]);
             ViewData["CurrentTeam"] = $"{team.Market} {team.Name}";
@@ -39,6 +39,10 @@ namespace NBAStatParty.Controllers
             ViewData["BackgroundColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Hex;
             ViewData["TextColor"] = team.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
             ViewData["PlayerData"] = playerData;
+            ViewData["TableUpColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Up();
+            ViewData["TableDownColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Down();
+
+
 
             return View(player);
         }

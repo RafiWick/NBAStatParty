@@ -6,6 +6,9 @@
     string backgroundColor = ViewData["BackgroundColor"] as string;
     string textColor = ViewData["TextColor"] as string;
     var playerData = ViewData["PlayerData"] as SR_PlayerProfile;
+    string tableUpColor = ViewData["TableUpColor"] as string;
+    string tableDownColor = ViewData["TableDownColor"] as string;
+
 }
 @model Player
 <script>
@@ -14,6 +17,27 @@
     }
     setBackground('@backgroundColor')
 </script>
+<style>
+    table {
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+        border: 3px solid @tableDownColor;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: @tableUpColor;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: @tableDownColor;
+    }
+
+    th,
+    td {
+        padding: 20px;
+    }
+</style>
 
 <h1 style="color: @textColor">@Model.FirstName</h1>
 <h1 style="color: @textColor">@Model.LastName</h1>
