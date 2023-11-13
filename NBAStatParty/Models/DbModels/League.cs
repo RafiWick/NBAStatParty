@@ -1,4 +1,7 @@
-﻿namespace NBAStatParty.Models.DbModels
+﻿using NBAStatParty.DataAccess;
+using NBAStatParty.Interfaces;
+
+namespace NBAStatParty.Models.DbModels
 {
     public class League
     {
@@ -18,12 +21,17 @@
             Id = input.League.Id;
             Name = input.League.Name;
             Alias = input.League.Alias;
+        }
 
-            foreach(var conference in input.Conferences)
+        public static async Task<League> CreateAsync(SR_Standings.SR_Standings input, INBAApiService _NBAApiService, string apiKey, NBAContext context)
+        {
+            League league = new League(input);
+            foreach (var conference in input.Conferences)
             {
-                var newConference = new Conference(conference);
-                Conferences.Add(newConference);
+                var newConference = await Conference.CreateAsync(conference, _NBAApiService, apiKey, context);
+                league.Conferences.Add(newConference);
             }
+            return league;
         }
     }
 }

@@ -96,28 +96,36 @@
 
 
 <h1>NBA Stat Party</h1>
-<div class="dropdown">
-    <button class="dropbtn" id="League">League</button>
-    <div class="dropdown-content" id="Leagues">
-        @foreach(League league in Model)
-        {
-            <a onclick="selectLeague('@league.Id')">@league.Alias</a>
-        }
+<div id="search-for-team">
+    <div class="dropdown">
+        <button class="dropbtn" id="League">League</button>
+        <div class="dropdown-content" id="Leagues">
+            @foreach(League league in Model)
+            {
+                <a onclick="selectLeague('@league.Id')">@league.Alias</a>
+            }
+        </div>
+    </div>
+    <div class="dropdown">
+        <button class="dropbtn" id="Conference">Conference</button>
+        <div class="dropdown-content" id="Conferences">
+        </div>
+    </div>
+    <div class="dropdown">
+        <button class="dropbtn" id="Division">Division</button>
+        <div class="dropdown-content" id="Divisions">
+        </div>
+    </div>
+    <div class="dropdown">
+        <button class="dropbtn" id="Team">Team</button>
+        <div class="dropdown-content" id="Teams">
+        </div>
     </div>
 </div>
-<div class="dropdown">
-    <button class="dropbtn" id="Conference">Conference</button>
-    <div class="dropdown-content" id="Conferences">
-    </div>
+<div id="search-for-player">
+    <form method="get" action="/players/search">
+        <label for="Name">Name: </label>
+        <input type="text" name="Name" id="Name" required />
+        <button type="submit">Search</button>
+    </form>
 </div>
-<div class="dropdown">
-    <button class="dropbtn" id="Division">Division</button>
-    <div class="dropdown-content" id="Divisions">
-    </div>
-</div>
-<div class="dropdown">
-    <button class="dropbtn" id="Team">Team</button>
-    <div class="dropdown-content" id="Teams">
-    </div>
-</div>
-

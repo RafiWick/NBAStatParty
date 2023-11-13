@@ -1,6 +1,6 @@
 ﻿namespace NBAStatParty.Models.SR_Standings
 {
-    public class StandingsGamesBehind
+    public class GamesBehind
     {
         public double League { get; set; }
         public double Conference { get; set; }

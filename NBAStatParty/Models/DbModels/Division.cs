@@ -1,5 +1,6 @@
 ﻿
-using NBAStatParty.Models.SR_Standings;
+using NBAStatParty.DataAccess;
+using NBAStatParty.Interfaces;
 
 namespace NBAStatParty.Models.DbModels
 {
@@ -16,17 +17,24 @@ namespace NBAStatParty.Models.DbModels
 
         }
 
-        public Division(StandingsDivision input)
+        public Division(SR_Standings.Division input)
         {
             Id = input.Id;
             Name = input.Name;
             Alias = input.Alias;
 
-            foreach(var team in input.Teams)
+            
+        }
+
+        public static async Task<Division> CreateAsync(SR_Standings.Division input, INBAApiService _NBAApiService, string apiKey, NBAContext context)
+        {
+            Division division = new Division(input);
+            foreach (var team in input.Teams)
             {
-                var newTeam = new Team(team);
-                Teams.Add(newTeam);
+                var newTeam = await Team.CreateAsync(team.Id, _NBAApiService, apiKey, context);
+                division.Teams.Add(newTeam);
             }
+            return division;
         }
     }
 }

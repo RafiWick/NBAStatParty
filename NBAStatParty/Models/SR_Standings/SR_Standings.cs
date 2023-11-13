@@ -2,8 +2,8 @@
 {
     public class SR_Standings
     {
-        public StandingsLeague League { get; set; }
-        public StandingsSeason Season { get; set; }
-        public List<StandingsConference> Conferences { get; set; }
+        public League League { get; set; }
+        public Season Season { get; set; }
+        public List<Conference> Conferences { get; set; }
     }
 }

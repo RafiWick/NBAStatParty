@@ -1,0 +1,17 @@
+﻿@using NBAStatParty.Models.DbModels;
+@{
+    string search = ViewData["Search"] as string;
+}
+@model List<Player>
+<h1>
+    <form method="get" action="/players/search">
+        <label for="Name">Name: </label>
+        <input type="text" name="Name" id="Name" value="@search" required />
+        <button type="submit">Search</button>
+    </form>
+</h1>
+
+@foreach(var player in Model){
+    <span><a href="/players/?id=@player.Id">@player.FullName</a> #@player.Number</span>
+    <br />
+}
