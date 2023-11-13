@@ -1,9 +1,11 @@
 ﻿@using NBAStatParty.Models.DbModels;
+@using NBAStatParty.Models.SR_PlayerProfile;
 @{
     string currentTeam = ViewData["CurrentTeam"] as string;
     string? draftedBy = ViewData["DraftedBy"] as string;
     string backgroundColor = ViewData["BackgroundColor"] as string;
     string textColor = ViewData["TextColor"] as string;
+    var playerData = ViewData["PlayerData"] as SR_PlayerProfile;
 }
 @model Player
 <script>
@@ -39,3 +41,50 @@ else
 {
     <h7 style="color: @textColor">Undrafted in @Model.RookieYear</h7>
 }
+
+<table id="default_averages">
+    <thead>
+        <tr>
+            <th style="color: @textColor">YEAR</th>
+            <th style="color: @textColor">TEAM</th>
+            <th style="color: @textColor">GP</th>
+            <th style="color: @textColor">GS</th>
+            <th style="color: @textColor">MIN</th>
+            <th style="color: @textColor">PTS</th>
+            <th style="color: @textColor">OR</th>
+            <th style="color: @textColor">DR</th>
+            <th style="color: @textColor">REB</th>
+            <th style="color: @textColor">AST</th>
+            <th style="color: @textColor">STL</th>
+            <th style="color: @textColor">BLK</th>
+            <th style="color: @textColor">TO</th>
+            <th style="color: @textColor">PF</th>
+            <th style="color: @textColor">AST/TO</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var season in playerData.Seasons)
+        {
+            foreach(var team in season.Teams)
+            {
+                <tr>
+                    <th style="color: @textColor">@season.Year</th>
+                    <th style="color: @textColor">@team.Alias</th>
+                    <th style="color: @textColor">@team.Total.Games_Played</th>
+                    <th style="color: @textColor">@team.Total.Games_Started</th>
+                    <th style="color: @textColor">@team.Average.Minutes</th>
+                    <th style="color: @textColor">@team.Average.Points</th>
+                    <th style="color: @textColor">@team.Average.Off_Rebounds</th>
+                    <th style="color: @textColor">@team.Average.Def_Rebounds</th>
+                    <th style="color: @textColor">@team.Average.Rebounds</th>
+                    <th style="color: @textColor">@team.Average.Assists</th>
+                    <th style="color: @textColor">@team.Average.Steals</th>
+                    <th style="color: @textColor">@team.Average.Blocks</th>
+                    <th style="color: @textColor">@team.Average.Turnovers</th>
+                    <th style="color: @textColor">@team.Average.Personal_Fouls</th>
+                    <th style="color: @textColor">@team.Total.Assists_Turnover_Ratio</th>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

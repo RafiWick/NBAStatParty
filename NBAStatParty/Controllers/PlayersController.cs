@@ -30,7 +30,7 @@ namespace NBAStatParty.Controllers
             var player = _context.Players.Include(p => p.Draft).FirstOrDefault(p => p.Id == id);
             var team = _context.Teams.Include(t => t.Colors).FirstOrDefault(t => t.Id == player.TeamId);
             var draftedBy = _context.Teams.Find(player.Draft.TeamId);
-            var teamData = _NBAApiService.GetPlayerProfile(id, _configuration["NBA_SPORTRADAR_APIKEY"]);
+            var playerData = await _NBAApiService.GetPlayerProfile(id, _configuration["NBA_SPORTRADAR_APIKEY"]);
             ViewData["CurrentTeam"] = $"{team.Market} {team.Name}";
             if (player.Draft.TeamId != null)
             {
@@ -38,7 +38,7 @@ namespace NBAStatParty.Controllers
             }
             ViewData["BackgroundColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Hex;
             ViewData["TextColor"] = team.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
-
+            ViewData["PlayerData"] = playerData;
 
             return View(player);
         }
