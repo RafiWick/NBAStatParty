@@ -7,6 +7,11 @@
         public string FavoriteId { get; set; }
         public int rating { get; set; }
         
+        public Favorite()
+        {
+
+        }
+        
         public Favorite(string type, string id)
         {
             Type = type;

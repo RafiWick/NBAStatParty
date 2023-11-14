@@ -41,8 +41,16 @@
     td {
         padding: 20px;
     }
+    .fa-star{
+        color: @backgroundColor;
+        outline-width: 12px;
+        outline-color: @textColor;
+    }
+    .checked {
+        color: @textColor;
+    }
 </style>
-<h1 style="color: @textColor">@Model.Market @Model.Name</h1>
+<h1 style="color: @textColor">@Model.Market @Model.Name <span class="fa fa-star "></span></h1>
 <table>
 
     <thead>
