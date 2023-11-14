@@ -33,8 +33,14 @@ namespace NBAStatParty.Controllers
                 await Task.Delay(1100);
                 await FillNBATeamSeasons(nba);
             }
-
-            var leagues = _context.Leagues.Include(l => l.Conferences).ThenInclude(c => c.Divisions).ThenInclude(d => d.Teams).ToList();
+            if (!_context.Leagues.Any(l => l.Id == "59c24590-0adb-4b3d-80a8-10450f83f4a1"))
+            {
+                var wnba = await CreateWNBATeams();
+                await Task.Delay(1100);
+                await FillWNBATeamSeasons(wnba);
+            }
+            var leagues = _context.Leagues.Include(l => l.Conferences).ThenInclude(c => c.Divisions).ThenInclude(d => d.Teams)
+                .Include(l => l.Conferences).ThenInclude(c => c.Teams).ToList();
             return View(leagues);
         }
 
@@ -42,7 +48,7 @@ namespace NBAStatParty.Controllers
         public async Task<League> CreateNBATeams()
         {
             string apiKey = _configuration["NBA_SPORTRADAR_APIKEY"];
-            var result = await _NBAApiService.GetStandings(2022, apiKey);
+            var result = await _NBAApiService.GetStandings(2022, apiKey, "nba");
             var league = await League.CreateAsync(result, _NBAApiService, apiKey, _context);
             _context.Leagues.Add(league);
             _context.SaveChanges();
@@ -53,10 +59,10 @@ namespace NBAStatParty.Controllers
         public async Task<bool> FillNBATeamSeasons(League league)
         {
             string apiKey = _configuration["NBA_SPORTRADAR_APIKEY"];
-            var seasons = new List<int> { 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 };
+            var seasons = new List<int> { 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 };
             foreach(int year in seasons)
             {
-                var result = await _NBAApiService.GetStandings(year, apiKey);
+                var result = await _NBAApiService.GetStandings(year, apiKey, "nba");
                 var season = new Season(result.Season);
                 league.Seasons.Add(season);
                 var standingsTeams = new List<Models.SR_Standings.Team>();
@@ -73,6 +79,49 @@ namespace NBAStatParty.Controllers
                     var team = _context.Teams.Find(standingsTeam.Id);
                     team.Seasons.Add(new TeamSeason(season, standingsTeam));
                     _context.Teams.Update(team);
+                }
+                await Task.Delay(1100);
+            }
+            _context.SaveChanges();
+            return true;
+        }
+
+        public async Task<League> CreateWNBATeams()
+        {
+            string apiKey = _configuration["WNBA_SPORTRADAR_APIKEY"];
+            var result = await _NBAApiService.GetStandings(2022, apiKey, "wnba");
+            var league = await League.CreateAsync(result, _NBAApiService, apiKey, _context);
+            _context.Leagues.Add(league);
+            _context.SaveChanges();
+
+            return league;
+        }
+
+        public async Task<bool> FillWNBATeamSeasons(League league)
+        {
+            string apiKey = _configuration["WNBA_SPORTRADAR_APIKEY"];
+            var seasons = new List<int> { 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 };
+            foreach (int year in seasons)
+            {
+                var result = await _NBAApiService.GetStandings(year, apiKey, "wnba");
+                var season = new Season(result.Season);
+                league.Seasons.Add(season);
+                var standingsTeams = new List<Models.SR_Standings.Team>();
+                foreach (var conference in result.Conferences)
+                {
+                    standingsTeams.AddRange(conference.Teams);
+                }
+
+                foreach (var standingsTeam in standingsTeams)
+                {
+                    var teams = _context.Teams.ToList();
+                    var team = _context.Teams.Find(standingsTeam.Id);
+                    if (team != null)
+                    {
+                        team.Seasons.Add(new TeamSeason(season, standingsTeam));
+
+                        _context.Teams.Update(team);
+                    }
                 }
                 await Task.Delay(1100);
             }

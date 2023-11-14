@@ -9,6 +9,7 @@ namespace NBAStatParty.Models.DbModels
         public string Name { get; set; }
         public string Alias { get; set; }
         public List<Division> Divisions { get; set; } = new List<Division>();
+        public List<Team> Teams { get; set; } = new List<Team>();
         public string LeagueId { get; set; }
 
         public Conference()
@@ -23,14 +24,26 @@ namespace NBAStatParty.Models.DbModels
             Alias = conference.Alias;
         }
 
-        public static async Task<Conference> CreateAsync(SR_Standings.Conference input, INBAApiService _NBAApiService, string apiKey, NBAContext context)
+        public static async Task<Conference> CreateAsync(SR_Standings.Conference input, string league, INBAApiService _NBAApiService, string apiKey, NBAContext context)
         {
             Conference conference = new Conference(input);
-            foreach (var division in input.Divisions)
+            if (input.Divisions != null)
             {
-                var newDivision = await Division.CreateAsync(division, _NBAApiService, apiKey, context);
-                conference.Divisions.Add(newDivision);
+                foreach (var division in input.Divisions)
+                {
+                    var newDivision = await Division.CreateAsync(division, league, _NBAApiService, apiKey, context);
+                    conference.Divisions.Add(newDivision);
+                }
             }
+            else
+            {
+                foreach (var team in input.Teams)
+                {
+                    var newTeam = await Team.CreateAsync(team.Id, league, _NBAApiService, apiKey, context);
+                    conference.Teams.Add(newTeam);
+                }
+            }
+            
             return conference;
         }
     }

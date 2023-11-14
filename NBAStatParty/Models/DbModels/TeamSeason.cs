@@ -14,7 +14,7 @@
         public float PointsAgainst { get; set; }
         public float PointDiff { get; set; }
         public GamesBehind GamesBehind { get; set; }
-        public Rank Ranks { get; set; }
+        public Rank? Ranks { get; set; }
         public List<Record> Records { get; set; } = new List<Record>();
 
 
@@ -35,8 +35,11 @@
             PointsAgainst = input.Points_Against;
             PointDiff = input.Point_Diff;
             GamesBehind = new GamesBehind(input.Games_Behind);
-            Ranks = new Rank(input.Calc_Rank);
-            foreach(var record in input.Records)
+            if(input.Calc_Rank != null)
+            {
+                Ranks = new Rank(input.Calc_Rank);
+            }
+            foreach (var record in input.Records)
             {
                 Records.Add(new Record(record));
             }

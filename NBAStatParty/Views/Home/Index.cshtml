@@ -63,12 +63,25 @@
         while (teamMenu.firstChild) {
             teamMenu.removeChild(teamMenu.firstChild)
         }
-        for (const division of conference.divisions) {
-            var div = document.createElement("a")
-            div.innerText = division.alias
-            div.setAttribute('onclick', "selectDivision('" + division.id + "')")
-            divisionMenu.appendChild(div);
+        if(conference.divisions.length === 0){
+            divisionButton = document.getElementById("Division");
+            divisionButton.innerText = conference.alias;
+            for (const team of conference.teams) {
+                var tm = document.createElement("a")
+                tm.innerText = team.market + " " + team.name
+                tm.setAttribute('href', '/teams/?id=' + team.id)
+                teamMenu.appendChild(tm);
+            }
         }
+        else{
+            for (const division of conference.divisions) {
+                var div = document.createElement("a")
+                div.innerText = division.alias
+                div.setAttribute('onclick', "selectDivision('" + division.id + "')")
+                divisionMenu.appendChild(div);
+            }
+        }
+        
     }
 
     function selectDivision(id) {

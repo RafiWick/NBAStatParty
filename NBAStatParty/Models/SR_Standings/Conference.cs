@@ -6,6 +6,8 @@
         public string Name { get; set; }
         public string Alias { get; set; }
         public List<Division> Divisions { get; set; }
+        public List<Team> Teams { get; set; }
+
 
     }
 }

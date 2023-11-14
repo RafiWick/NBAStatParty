@@ -14,9 +14,9 @@ namespace NBAStatParty.Services
             _client = clientFactory.CreateClient("NBAAPI");
         }
 
-        public async Task<SR_Standings> GetStandings(int year, string apiKey)
+        public async Task<SR_Standings> GetStandings(int year, string apiKey, string league)
         {
-            var url = string.Format("/nba/trial/v8/en/seasons/{0}/REG/standings.json?api_key={1}", year, apiKey);
+            var url = string.Format("/{2}/trial/v8/en/seasons/{0}/REG/standings.json?api_key={1}", year, apiKey, league);
             var result = new SR_Standings();
             var response = await _client.GetAsync(url);
 
@@ -32,9 +32,9 @@ namespace NBAStatParty.Services
             return result;
         }
         
-        public async Task<SR_TeamProfile> GetTeamProfile(string id, string apiKey)
+        public async Task<SR_TeamProfile> GetTeamProfile(string id, string apiKey, string league)
         {
-            var url = string.Format("/nba/trial/v8/en/teams/{0}/profile.json?api_key={1}", id, apiKey);
+            var url = string.Format("/{2}/trial/v8/en/teams/{0}/profile.json?api_key={1}", id, apiKey, league);
             var result = new SR_TeamProfile();
             var response = await _client.GetAsync(url);
 
@@ -50,9 +50,9 @@ namespace NBAStatParty.Services
             return result;
         }
 
-        public async Task<SR_PlayerProfile> GetPlayerProfile(string id, string apiKey)
+        public async Task<SR_PlayerProfile> GetPlayerProfile(string id, string apiKey, string league)
         {
-            var url = string.Format("/nba/trial/v8/en/players/{0}/profile.json?api_key={1}", id, apiKey);
+            var url = string.Format("/{2}/trial/v8/en/players/{0}/profile.json?api_key={1}", id, apiKey, league);
             var result = new SR_PlayerProfile();
             var response = await _client.GetAsync(url);
 

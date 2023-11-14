@@ -1,10 +1,18 @@
 ﻿@using NBAStatParty.Models.DbModels;
 @model Team;
 @{
-    string backgroundColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Hex as string;
-    string textColor = Model.Colors.FirstOrDefault(c => c.Type == "secondary").Hex as string;
-    string tableUpColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Up() as string;
-    string tableDownColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Down() as string;
+    string backgroundColor = "#FFFFFF";
+    string textColor = "#000000";
+    string tableUpColor = "#FFFFFF";
+    string tableDownColor = "#F9F9F9";
+    if (Model.Colors.Any())
+    {
+        backgroundColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Hex as string;
+        textColor = Model.Colors.FirstOrDefault(c => c.Type == "secondary").Hex as string;
+        tableUpColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Up() as string;
+        tableDownColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Down() as string;
+    }
+
 
 }
 <script>
@@ -67,10 +75,24 @@
                 <th style="color: @textColor">@season.PointsAgainst</th>
                 <th style="color: @textColor">@season.PointDiff</th>
                 <th style="color: @textColor"></th>
-                <th style="color: @textColor">@season.Ranks.DivRank</th>
+                @if(@season.Ranks != null)
+                {
+                    <th style="color: @textColor">@season.Ranks.DivRank</th>
+                }
+                else
+                {
+                    <th style="color: @textColor">N/A</th>
+                }
                 <th style="color: @textColor">@season.GamesBehind.Division</th>
                 <th style="color: @textColor"></th>
-                <th style="color: @textColor">@season.Ranks.ConfRank</th>
+                @if (@season.Ranks != null)
+                {
+                    <th style="color: @textColor">@season.Ranks.ConfRank</th>
+                }
+                else
+                {
+                    <th style="color: @textColor">N/A</th>
+                }
                 <th style="color: @textColor">@season.GamesBehind.Conference</th>
             </tr>
         }

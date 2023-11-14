@@ -13,12 +13,12 @@ namespace NBAStatParty.Models.DbModels
         public string VenueId { get; set; }
         public string LeagueAlias { get; set; }
         public string ConferenceAlias { get; set; }
-        public string DivisionAlias { get; set; }
+        public string? DivisionAlias { get; set; }
         public List<Coach> Coaches { get; set; } = new List<Coach>();
         public List<Color> Colors { get; set; } = new List<Color>();
         public List<Player> Roster { get; set; } = new List<Player>();
         public List<TeamSeason> Seasons { get; set; } = new List<TeamSeason>();
-        public string DivisionId { get; set; }
+        public string? DivisionId { get; set; }
 
         public Team()
         {
@@ -34,7 +34,10 @@ namespace NBAStatParty.Models.DbModels
             Founded = input.Founded;
             LeagueAlias = input.League.Alias;
             ConferenceAlias = input.Conference.Alias;
-            DivisionAlias = input.Division.Alias;
+            if(input.Division != null)
+            {
+                DivisionAlias = input.Division.Alias;
+            }
             VenueId = input.Venue.Id;
             if(!context.Venues.Any(v=> v.Id == input.Venue.Id))
             {
@@ -57,10 +60,10 @@ namespace NBAStatParty.Models.DbModels
             }
         }
 
-        public static async Task<Team> CreateAsync(string id, INBAApiService _NBAApiService, string apiKey, NBAContext context)
+        public static async Task<Team> CreateAsync(string id, string league, INBAApiService _NBAApiService, string apiKey, NBAContext context)
         {
             await Task.Delay(1100);
-            var teamData = await _NBAApiService.GetTeamProfile(id, apiKey);
+            var teamData = await _NBAApiService.GetTeamProfile(id, apiKey, league);
             Team team = new Team(teamData, context);
             return team;
         }
