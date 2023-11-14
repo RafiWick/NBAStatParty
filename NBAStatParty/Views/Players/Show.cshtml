@@ -8,6 +8,7 @@
     var playerData = ViewData["PlayerData"] as SR_PlayerProfile;
     string tableUpColor = ViewData["TableUpColor"] as string;
     string tableDownColor = ViewData["TableDownColor"] as string;
+    string teamId = ViewData["TeamId"] as string;
 
 }
 @model Player
@@ -41,7 +42,7 @@
 
 <h1 style="color: @textColor">@Model.FirstName</h1>
 <h1 style="color: @textColor">@Model.LastName</h1>
-<h3 style="color: @textColor">@currentTeam | #@Model.Number | @Model.Position</h3>
+<h3 style="color: @textColor"><a href="/teams/?id=@teamId" style="color: @textColor">@currentTeam</a> | #@Model.Number | @Model.Position</h3>
 <h6 style="color: @textColor">@Model.HeightString(), @Model.Weight lbs</h6>
 <h6 style="color: @textColor">Birthdate: @Model.Birthdate</h6>
 @if(Model.College != null)
