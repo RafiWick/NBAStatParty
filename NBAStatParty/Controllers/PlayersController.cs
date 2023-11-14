@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NBAStatParty.DataAccess;
 using NBAStatParty.Interfaces;
+using NBAStatParty.Services;
 
 namespace NBAStatParty.Controllers
 {
@@ -30,17 +31,29 @@ namespace NBAStatParty.Controllers
             var player = _context.Players.Include(p => p.Draft).FirstOrDefault(p => p.Id == id);
             var team = _context.Teams.Include(t => t.Colors).ThenInclude(c => c.RGB).FirstOrDefault(t => t.Id == player.TeamId);
             var draftedBy = _context.Teams.Find(player.Draft.TeamId);
-            var playerData = await _NBAApiService.GetPlayerProfile(id, _configuration["NBA_SPORTRADAR_APIKEY"]);
+            var apiKey = "";
+            if (team.LeagueAlias.ToLower() == "nba") apiKey = _configuration["NBA_SPORTRADAR_APIKEY"];
+            else apiKey = _configuration["WNBA_SPORTRADAR_APIKEY"];
+            var playerData = await (_NBAApiService as NBAApiService).GetPlayerProfile(id, apiKey, team.LeagueAlias.ToLower());
             ViewData["CurrentTeam"] = $"{team.Market} {team.Name}";
             if (player.Draft.TeamId != null)
             {
                 ViewData["DraftedBy"] = draftedBy.Alias;
             }
-            ViewData["BackgroundColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Hex;
-            ViewData["TextColor"] = team.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
+            if (team.Colors.Any()){
+                ViewData["BackgroundColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Hex;
+                ViewData["TextColor"] = team.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
+                ViewData["TableUpColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Up();
+                ViewData["TableDownColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Down();
+            }
+            else
+            {
+                ViewData["BackgroundColor"] = "#FFFFFF";
+                ViewData["TextColor"] = "#000000";
+                ViewData["TableUpColor"] = "#FFFFFF";
+                ViewData["TableDownColor"] = "#F9F9F9";
+            }
             ViewData["PlayerData"] = playerData;
-            ViewData["TableUpColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Up();
-            ViewData["TableDownColor"] = team.Colors.FirstOrDefault(c => c.Type == "primary").Down();
 
 
 

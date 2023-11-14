@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NBAStatParty.DataAccess;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NBAStatParty.Migrations
 {
     [DbContext(typeof(NBAContext))]
-    partial class NBAContextModelSnapshot : ModelSnapshot
+    [Migration("20231114174128_add-wnba")]
+    partial class addwnba
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,7 +266,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnType("text")
                         .HasColumnName("college");
 
-                    b.Property<int?>("DraftId")
+                    b.Property<int>("DraftId")
                         .HasColumnType("integer")
                         .HasColumnName("draft_id");
 
@@ -510,10 +513,12 @@ namespace NBAStatParty.Migrations
                         .HasColumnName("conference_id");
 
                     b.Property<string>("DivisionAlias")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("division_alias");
 
                     b.Property<string>("DivisionId")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("division_id");
 
@@ -585,7 +590,7 @@ namespace NBAStatParty.Migrations
                         .HasColumnType("real")
                         .HasColumnName("points_for");
 
-                    b.Property<int?>("RanksId")
+                    b.Property<int>("RanksId")
                         .HasColumnType("integer")
                         .HasColumnName("ranks_id");
 
@@ -729,6 +734,8 @@ namespace NBAStatParty.Migrations
                     b.HasOne("NBAStatParty.Models.DbModels.PlayerDraft", "Draft")
                         .WithMany()
                         .HasForeignKey("DraftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_players_player_drafts_draft_id");
 
                     b.HasOne("NBAStatParty.Models.DbModels.Team", null)
@@ -769,6 +776,8 @@ namespace NBAStatParty.Migrations
                     b.HasOne("NBAStatParty.Models.DbModels.Division", null)
                         .WithMany("Teams")
                         .HasForeignKey("DivisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_teams_divisions_division_id");
 
                     b.HasOne("NBAStatParty.Models.DbModels.Venue", null)
@@ -791,6 +800,8 @@ namespace NBAStatParty.Migrations
                     b.HasOne("NBAStatParty.Models.DbModels.Rank", "Ranks")
                         .WithMany()
                         .HasForeignKey("RanksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_team_seasons_ranks_ranks_id");
 
                     b.HasOne("NBAStatParty.Models.DbModels.Team", null)

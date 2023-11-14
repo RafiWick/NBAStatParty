@@ -20,7 +20,7 @@
         public string BirthPlace { get; set; }
         public string Birthdate { get; set; }
         public int RookieYear { get; set; }
-        public PlayerDraft Draft { get; set; }
+        public PlayerDraft? Draft { get; set; }
 
         public Player()
         {
@@ -51,7 +51,10 @@
             BirthPlace = input.Birth_Place;
             Birthdate = input.Birthdate;
             RookieYear = input.Rookie_Year;
-            Draft = new PlayerDraft(input.Draft);
+            if (input.Draft != null)
+            {
+                Draft = new PlayerDraft(input.Draft);
+            }
 
         }
 

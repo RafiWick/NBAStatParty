@@ -28,7 +28,7 @@ namespace NBAStatParty.Models.DbModels
             League league = new League(input);
             foreach (var conference in input.Conferences)
             {
-                var newConference = await Conference.CreateAsync(conference, _NBAApiService, apiKey, context);
+                var newConference = await Conference.CreateAsync(conference, input.League.Alias.ToLower(), _NBAApiService, apiKey, context);
                 league.Conferences.Add(newConference);
             }
             return league;

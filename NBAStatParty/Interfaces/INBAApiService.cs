@@ -6,8 +6,8 @@ namespace NBAStatParty.Interfaces
 {
     public interface INBAApiService
     {
-        Task<SR_Standings> GetStandings(int year, string apiKey);
-        Task<SR_TeamProfile> GetTeamProfile(string id, string apiKey);
-        Task<SR_PlayerProfile> GetPlayerProfile(string id, string apiKey);
+        Task<SR_Standings> GetStandings(int year, string apiKey, string league);
+        Task<SR_TeamProfile> GetTeamProfile(string id, string apiKey, string league);
+        Task<SR_PlayerProfile> GetPlayerProfile(string id, string apiKey, string league);
     }
 }

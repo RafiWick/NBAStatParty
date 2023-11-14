@@ -26,12 +26,12 @@ namespace NBAStatParty.Models.DbModels
             
         }
 
-        public static async Task<Division> CreateAsync(SR_Standings.Division input, INBAApiService _NBAApiService, string apiKey, NBAContext context)
+        public static async Task<Division> CreateAsync(SR_Standings.Division input,string league, INBAApiService _NBAApiService, string apiKey, NBAContext context)
         {
             Division division = new Division(input);
             foreach (var team in input.Teams)
             {
-                var newTeam = await Team.CreateAsync(team.Id, _NBAApiService, apiKey, context);
+                var newTeam = await Team.CreateAsync(team.Id, league, _NBAApiService, apiKey, context);
                 division.Teams.Add(newTeam);
             }
             return division;
