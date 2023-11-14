@@ -27,7 +27,7 @@ namespace NBAStatParty.DataAccess
         public DbSet<PlayerDraft> PlayerDrafts { get; set; }
         public DbSet<RGB> RGBs { get; set; }
 
-
+        public DbSet<Favorite> Favorites { get; set; }
 
         public NBAContext(DbContextOptions<NBAContext> options) : base(options)
         {
