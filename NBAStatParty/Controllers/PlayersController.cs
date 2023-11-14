@@ -75,5 +75,14 @@ namespace NBAStatParty.Controllers
             var players = _context.Players.Where(p => p.FullName.ToLower().Contains(Name.ToLower())).ToList();
             return View(players);
         }
+
+        [HttpPost]
+        [Route("players/addfavorite")]
+        public IActionResult AddFavorite(string? id)
+        {
+            var favorite = new Favorite("PLAYER", id);
+            _context.Favorites.Add(favorite);
+            return Ok();
+        }
     }
 }

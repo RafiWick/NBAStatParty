@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NBAStatParty.DataAccess;
 using NBAStatParty.Interfaces;
+using NBAStatParty.Models.DbModels;
 
 namespace NBAStatParty.Controllers
 {
@@ -33,6 +34,15 @@ namespace NBAStatParty.Controllers
 
 
             return View(team);
+        }
+
+        [HttpPost]
+        [Route("teams/addfavorite")]
+        public IActionResult AddFavorite(string? id)
+        {
+            var favorite = new Favorite("TEAM", id);
+            _context.Favorites.Add(favorite);
+            return Ok();
         }
     }
 }
