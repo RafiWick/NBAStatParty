@@ -31,7 +31,7 @@ namespace NBAStatParty.Controllers
                 .Include(t => t.Seasons).ThenInclude(s => s.Records)
                 .FirstOrDefault(t => t.Id == id);
 
-
+            ViewData["Favorites"] = _context.Favorites.Select(f => f.FavoriteId).ToList();
 
             return View(team);
         }
@@ -42,6 +42,17 @@ namespace NBAStatParty.Controllers
         {
             var favorite = new Favorite("TEAM", id);
             _context.Favorites.Add(favorite);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("teams/removefavorite")]
+        public IActionResult RemoveFavorite(string? id)
+        {
+            var favorite = _context.Favorites.FirstOrDefault(f => f.FavoriteId == id);
+            _context.Favorites.Remove(favorite);
+            _context.SaveChanges();
             return Ok();
         }
     }

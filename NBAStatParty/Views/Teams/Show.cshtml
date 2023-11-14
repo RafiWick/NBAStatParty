@@ -12,25 +12,10 @@
         tableUpColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Up() as string;
         tableDownColor = Model.Colors.FirstOrDefault(c => c.Type == "primary").Down() as string;
     }
-
+    List<string> Favorites = ViewData["Favorites"] as List<string>;
 
 }
-<script>
-    document.body.style.backgroundColor = '@backgroundColor';
-    
 
-
-    function checkFavorite(){
-        var icon = document.getElementById("Favorite");
-        if(icon.classList.contains("checked")){
-            icon.classList.remove("checked");
-        }
-        else{
-            icon.classList.add("checked");
-        }
-    }
-
-</script>
 <style>
     table {
         table-layout: fixed;
@@ -60,7 +45,7 @@
         text-shadow: 0px 0px 2px @textColor;
     }
 </style>
-<h1 style="color: @textColor">@Model.Market @Model.Name <span onclick="checkFavorite()" id="Favorite" class="fa fa-star "></span></h1>
+<h1 style="color: @textColor">@Model.Market @Model.Name <span onclick="checkFavorite()" id="Favorite" class="fa fa-star"></span></h1>
 <table>
 
     <thead>
@@ -142,3 +127,42 @@
         }
     </tbody>
 </table>
+
+
+<script>
+    document.body.style.backgroundColor = '@backgroundColor';
+
+    const favorites = @Html.Raw(Json.Serialize(Favorites));
+    if (favorites.includes('@Model.Id')) {
+        var icon = document.getElementById("Favorite");
+        icon.classList.add("checked");
+    }
+
+
+    async function checkFavorite() {
+        var icon = document.getElementById("Favorite");
+        if (icon.classList.contains("checked")) {
+            icon.classList.remove("checked");
+            await deleteFavorite();
+        }
+        else {
+            icon.classList.add("checked");
+            await createFavorite();
+        }
+    }
+
+    async function createFavorite() {
+        const url = '/teams/addfavorite/?id=@Model.Id';
+        const request = new Request(url, {
+            method: 'POST'
+        })
+        const response = await fetch(request);
+    }
+    async function deleteFavorite() {
+        const url = "/teams/removefavorite/?id=@Model.Id";
+        const request = new Request(url, {
+            method: 'POST'
+        })
+        const response = await fetch(request);
+    }
+</script>
