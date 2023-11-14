@@ -16,10 +16,20 @@
 
 }
 <script>
-    function setBackground(color){
-        document.body.style.backgroundColor = color;
+    document.body.style.backgroundColor = '@backgroundColor';
+    
+
+
+    function checkFavorite(){
+        var icon = document.getElementById("Favorite");
+        if(icon.classList.contains("checked")){
+            icon.classList.remove("checked");
+        }
+        else{
+            icon.classList.add("checked");
+        }
     }
-    setBackground('@backgroundColor')
+
 </script>
 <style>
     table {
@@ -43,14 +53,14 @@
     }
     .fa-star{
         color: @backgroundColor;
-        outline-width: 12px;
-        outline-color: @textColor;
+        text-shadow: 0px 0px 10px @textColor;
     }
     .checked {
         color: @textColor;
+        text-shadow: 0px 0px 2px @textColor;
     }
 </style>
-<h1 style="color: @textColor">@Model.Market @Model.Name <span class="fa fa-star "></span></h1>
+<h1 style="color: @textColor">@Model.Market @Model.Name <span onclick="checkFavorite()" id="Favorite" class="fa fa-star "></span></h1>
 <table>
 
     <thead>
