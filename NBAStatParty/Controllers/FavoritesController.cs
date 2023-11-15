@@ -20,8 +20,12 @@ namespace NBAStatParty.Controllers
         public IActionResult Index()
         {
             var favorites = _context.Favorites.OrderByDescending(f => f.Rating).ToList();
-            var favoriteTeams = _context.Teams.Include(t => t.Colors).Where(t => favorites.Select(f => f.FavoriteId).Contains(t.Id)).ToList();
+            var favoritePlayers = _context.Players.Where(p => favorites.Select(f => f.FavoriteId).Contains(p.Id)).ToList();
+            var favoriteTeams = _context.Teams.Include(t => t.Colors).Where(t => favorites.Select(f => f.FavoriteId).Contains(t.Id)
+                || favoritePlayers.Select(p => p.TeamId).Contains(t.Id)).ToList();
+            
             ViewData["FavoriteTeams"] = favoriteTeams;
+            ViewData["FavoritePlayers"] = favoritePlayers;
             return View(favorites);
         }
 
