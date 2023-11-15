@@ -9,15 +9,10 @@
     string tableUpColor = ViewData["TableUpColor"] as string;
     string tableDownColor = ViewData["TableDownColor"] as string;
     string teamId = ViewData["TeamId"] as string;
-
+    List<string> Favorites = ViewData["Favorites"] as List<string>;
 }
 @model Player
-<script>
-    function setBackground(color) {
-        document.body.style.backgroundColor = color;
-    }
-    setBackground('@backgroundColor')
-</script>
+
 <style>
     table {
         table-layout: fixed;
@@ -38,11 +33,22 @@
     td {
         padding: 20px;
     }
+
+    .fa-star {
+        color: @backgroundColor;
+        text-shadow: 0px 0px 10px @textColor;
+    }
+
+    .checked {
+        color: @textColor;
+        text-shadow: 0px 0px 2px @textColor;
+    }
+
 </style>
 
-<h1 style="color: @textColor">@Model.FirstName</h1>
+<h1 style="color: @textColor">@Model.FirstName <span onclick="checkFavorite()" id="Favorite" class="fa fa-star"></span></h1>
 <h1 style="color: @textColor">@Model.LastName</h1>
-<h3 style="color: @textColor"><a href="/teams/?id=@teamId" style="color: @textColor">@currentTeam</a> | #@Model.Number | @Model.Position</h3>
+<h3 style="color: @textColor"><a href="/teams/?id=@teamId" style="color: @textColor">@currentTeam</a><span onclick="checkTeamFavorite()" id="TeamFavorite" class="fa fa-star"></span> | #@Model.Number | @Model.Position</h3>
 <h6 style="color: @textColor">@Model.HeightString(), @Model.Weight lbs</h6>
 <h6 style="color: @textColor">Birthdate: @Model.Birthdate</h6>
 @if(Model.College != null)
@@ -113,3 +119,81 @@ else
         }
     </tbody>
 </table>
+
+
+
+<script>
+    function setBackground(color) {
+        document.body.style.backgroundColor = color;
+    }
+    setBackground('@backgroundColor')
+
+    const favorites = @Html.Raw(Json.Serialize(Favorites));
+    if (favorites.includes('@Model.TeamId')) {
+        var icon = document.getElementById("TeamFavorite");
+        icon.classList.add("checked");
+    }
+    if (favorites.includes('@Model.Id')) {
+        var icon = document.getElementById("Favorite");
+        icon.classList.add("checked");
+    }
+
+    async function checkTeamFavorite() {
+        var icon = document.getElementById("TeamFavorite");
+        if (icon.classList.contains("checked")) {
+            icon.classList.remove("checked");
+            await deleteTeamFavorite();
+        }
+        else {
+            icon.classList.add("checked");
+            await createTeamFavorite();
+        }
+    }
+
+    async function createTeamFavorite() {
+        const url = '/teams/addfavorite/?id=@Model.TeamId';
+        const request = new Request(url, {
+            method: 'POST'
+        })
+        const response = await fetch(request);
+    }
+    async function deleteTeamFavorite() {
+        const url = "/teams/removefavorite/?id=@Model.TeamId";
+        const request = new Request(url, {
+            method: 'POST'
+        })
+        const response = await fetch(request);
+    }
+
+
+    
+
+
+    async function checkFavorite() {
+        var icon = document.getElementById("Favorite");
+        if (icon.classList.contains("checked")) {
+            icon.classList.remove("checked");
+            await deleteFavorite();
+        }
+        else {
+            icon.classList.add("checked");
+            await createFavorite();
+        }
+    }
+
+    async function createFavorite() {
+        const url = '/players/addfavorite/?id=@Model.Id';
+        const request = new Request(url, {
+            method: 'POST'
+        })
+        const response = await fetch(request);
+    }
+    async function deleteFavorite() {
+        const url = "/players/removefavorite/?id=@Model.Id";
+        const request = new Request(url, {
+            method: 'POST'
+        })
+        const response = await fetch(request);
+    }
+
+</script>

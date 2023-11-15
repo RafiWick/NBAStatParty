@@ -63,6 +63,7 @@ namespace NBAStatParty.Controllers
                 ViewData["TableDownColor"] = "#F9F9F9";
             }
             ViewData["PlayerData"] = playerData;
+            ViewData["Favorites"] = _context.Favorites.Select(f => f.FavoriteId).ToList();
 
 
 
@@ -82,6 +83,17 @@ namespace NBAStatParty.Controllers
         {
             var favorite = new Favorite("PLAYER", id);
             _context.Favorites.Add(favorite);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("players/removefavorite")]
+        public IActionResult RemoveFavorite(string? id)
+        {
+            var favorite = _context.Favorites.FirstOrDefault(f => f.FavoriteId == id);
+            _context.Favorites.Remove(favorite);
+            _context.SaveChanges();
             return Ok();
         }
     }
