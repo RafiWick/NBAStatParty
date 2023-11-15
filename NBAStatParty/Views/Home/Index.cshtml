@@ -10,8 +10,25 @@
     string downColor = ViewData["TableDownColor"] as string;
 }
 
+<script>
+    var nav = document.getElementById('navbar');
+    nav.style.backgroundColor = '@upColor';
+</script>
+
 <style>
     /* Dropdown Button */
+    
+    #text1{
+        color:@textColor;
+    }
+
+    #text2{
+        color: @textColor;
+    }
+
+    #text3{
+        color: @textColor;
+    }
     .dropbtn {
         background-color: @upColor;
         color: @textColor;

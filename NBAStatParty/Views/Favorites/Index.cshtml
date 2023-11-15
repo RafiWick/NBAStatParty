@@ -3,6 +3,7 @@
 @{
     var BackgroundColor = "#FFFFFF";
     var TextColor = "#000000";
+    var upColor = "#FFFFFF";
     var favoriteTeams = ViewData["FavoriteTeams"] as List<Team>;
     var favoritePlayers = ViewData["FavoritePlayers"] as List<Player>;
     var FavoriteTeam = favoriteTeams.FirstOrDefault(t => t.Id == Model.FirstOrDefault(t => t.Type == "TEAM").FavoriteId);
@@ -11,10 +12,29 @@
     {
         BackgroundColor = FavoriteTeam.Colors.FirstOrDefault(c => c.Type == "primary").Hex;
         TextColor = FavoriteTeam.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
+        upColor = FavoriteTeam.Colors.FirstOrDefault(c => c.Type == "primary").Up() as string;
     }
     
 }
+<script>
+    var nav = document.getElementById('navbar');
+    nav.style.backgroundColor = '@upColor';
+</script>
 
+<style>
+    /* Dropdown Button */
+    
+    #text1{
+        color:@TextColor;
+    }
+
+    #text2{
+        color: @TextColor;
+    }
+
+    #text3{
+        color: @TextColor;
+    }
 
      @foreach(var team in favoriteTeams)
     {
