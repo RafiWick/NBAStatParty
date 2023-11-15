@@ -41,6 +41,26 @@ namespace NBAStatParty.Controllers
             }
             var leagues = _context.Leagues.Include(l => l.Conferences).ThenInclude(c => c.Divisions).ThenInclude(d => d.Teams)
                 .Include(l => l.Conferences).ThenInclude(c => c.Teams).ToList();
+
+            var favoriteTeam = _context.Teams.Include(t => t.Colors).ThenInclude(c => c.RGB)
+                .FirstOrDefault(t => t.Id == _context.Favorites.OrderByDescending(f => f.Rating).FirstOrDefault(t => t.Type == "TEAM").FavoriteId);
+
+            if (favoriteTeam.Colors.Any())
+            {
+                ViewData["BackgroundColor"] = favoriteTeam.Colors.FirstOrDefault(c => c.Type == "primary").Hex;
+                ViewData["TextColor"] = favoriteTeam.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
+                ViewData["TableUpColor"] = favoriteTeam.Colors.FirstOrDefault(c => c.Type == "primary").Up();
+                ViewData["TableDownColor"] = favoriteTeam.Colors.FirstOrDefault(c => c.Type == "primary").Down();
+            }
+            else
+            {
+                ViewData["BackgroundColor"] = "#FFFFFF";
+                ViewData["TextColor"] = "#000000";
+                ViewData["TableUpColor"] = "#FFFFFF";
+                ViewData["TableDownColor"] = "#F9F9F9";
+            }
+
+
             return View(leagues);
         }
 
