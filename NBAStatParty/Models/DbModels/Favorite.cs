@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string Type { get; set; }
         public string FavoriteId { get; set; }
-        public int rating { get; set; }
+        public int Rating { get; set; }
         
         public Favorite()
         {
@@ -16,7 +16,7 @@
         {
             Type = type;
             FavoriteId = id;
-            rating = 0;
+            Rating = 0;
         }
     }
 }

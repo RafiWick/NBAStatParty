@@ -1,0 +1,136 @@
+﻿@using NBAStatParty.Models.DbModels;
+@model List<Favorite>
+@{
+    var BackgroundColor = "#FFFFFF";
+    var TextColor = "#000000";
+    var favoriteTeams = ViewData["FavoriteTeams"] as List<Team>;
+    var FavoriteTeam = favoriteTeams.FirstOrDefault(t => t.Id == Model.FirstOrDefault(t => t.Type == "TEAM").FavoriteId);
+
+    if (FavoriteTeam.Colors.Any())
+    {
+        BackgroundColor = FavoriteTeam.Colors.FirstOrDefault(c => c.Type == "primary").Hex;
+        TextColor = FavoriteTeam.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
+    }
+    
+}
+
+
+     @foreach(var favorite in Model)
+    {
+        if (favorite.Type == "TEAM")
+        {
+            var backgroundColor = "#FFFFFF";
+            var textColor = "#000000";
+
+            var favoriteTeam = favoriteTeams.FirstOrDefault(t => t.Id == favorite.FavoriteId);
+
+            if (favoriteTeam.Colors.Any())
+            {
+                backgroundColor = favoriteTeam.Colors.FirstOrDefault(c => c.Type == "primary").Hex;
+                textColor = favoriteTeam.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
+            }
+            <style>
+                .c-@favorite.FavoriteId{
+                    color: @backgroundColor;
+                    text-shadow: 0px 0px 10px @textColor;
+                }
+                .c-@favorite.FavoriteId-checked {
+                    color: @textColor;
+                    text-shadow: 0px 0px 2px @textColor;
+                }
+            </style>
+        }
+    }
+
+    <script>
+        document.body.style.backgroundColor = '@BackgroundColor';
+
+
+        async function rate(n, id){
+
+            for (let i = 1; i <= 5; i++){
+                const star = document.getElementById("s-"+i+"-"+id);
+                if(i <= n){
+                    if(!star.classList.contains("c-"+id+"-checked")){
+                        star.classList.remove("c-"+id);
+                        star.classList.add("c-"+id+"-checked");
+                    }
+                }
+                
+                else{
+                    if(!star.classList.contains("c-"+id)){
+                        star.classList.remove("c-"+id+"-checked");
+                        star.classList.add("c-"+id);
+                    }
+                }
+            }
+            
+            await updateRating(n, id)
+        }
+
+
+        async function updateRating(n, id){
+            const url = "/favorites/updaterating/?rating=" + n + "&id=" + id;
+            const request = new Request(url, {
+                method: 'POST'
+            })
+            const response = await fetch(request);
+        }
+
+        async function removeFavorite(id){
+            var div = document.getElementById("d-"+id);
+            div.setAttribute('hidden', true);
+
+
+            const url = "/teams/removefavorite/?id=" + id;
+            const request = new Request(url, {
+                method: 'POST'
+            })
+            const response = await fetch(request);
+        }
+
+
+    </script>
+
+
+<h1 style="color: @TextColor">Favorites</h1>
+<div id="favTeams">
+    <h2 style="color: @TextColor">Favorite Teams</h2>
+    @foreach(var favorite in Model)
+    {
+        if(favorite.Type == "TEAM")
+        {
+            var backgroundColor = "#FFFFFF";
+            var textColor = "#000000";
+
+            var favoriteTeam = favoriteTeams.FirstOrDefault(t => t.Id == favorite.FavoriteId);
+
+            if (favoriteTeam.Colors.Any())
+            {
+                backgroundColor = favoriteTeam.Colors.FirstOrDefault(c => c.Type == "primary").Hex;
+                textColor = favoriteTeam.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
+            }
+
+            
+            <div id="d-@favorite.FavoriteId" style="background-color: @backgroundColor">
+                <h4 >
+                    <a style ="color: @textColor" href="/teams/?id=@favoriteTeam.Id">@favoriteTeam.Market @favoriteTeam.Name</a>
+                </h4>
+                <h6>
+                    @for(int i = 1; i <= 5; i++)
+                    {
+                        if(favorite.Rating >= i)
+                        {
+                            <span onclick="rate(@i, '@favorite.FavoriteId')" class="fa fa-star c-@favorite.FavoriteId-checked" id="s-@i-@favorite.FavoriteId"></span>
+                        }
+                        else
+                        {
+                            <span onclick="rate(@i, '@favorite.FavoriteId')" class="fa fa-star c-@favorite.FavoriteId" id="s-@i-@favorite.FavoriteId"></span>
+                        }
+                    }
+                </h6>
+                <button onclick="removeFavorite('@favorite.FavoriteId')" style="background-color: @backgroundColor"><span style="color:@textColor">Remove From Favorites</span></button>
+           </div>
+        }
+    }
+</div>   
