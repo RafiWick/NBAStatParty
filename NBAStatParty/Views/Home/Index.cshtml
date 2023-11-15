@@ -29,6 +29,7 @@
     #text3{
         color: @textColor;
     }
+
     .dropbtn {
         background-color: @upColor;
         color: @textColor;
@@ -37,6 +38,9 @@
         border: none;
     }
 
+    .toggled{
+        background-color: @downColor;
+    }
     /* The container <div> - needed to position the dropdown content */
     .dropdown {
         position: relative;
@@ -180,12 +184,41 @@
         }
     }
 
+    function toggleTeam(){
+        var teamButton = document.getElementById("teamButton");
+        var playerButton = document.getElementById("playerButton");
+        var teamDiv = document.getElementById("search-for-team");
+        var playerDiv = document.getElementById("search-for-player");
+        if(!teamButton.classList.contains("toggled")){
+            teamButton.classList.add("toggled");
+            playerButton.classList.remove("toggled");
+            teamDiv.removeAttribute("hidden");
+            playerDiv.setAttribute("hidden", "true");
+        }
+    }
+    function togglePlayer() {
+        var teamButton = document.getElementById("teamButton");
+        var playerButton = document.getElementById("playerButton");
+        var teamDiv = document.getElementById("search-for-team");
+        var playerDiv = document.getElementById("search-for-player");
+        if (!playerButton.classList.contains("toggled")){
+            playerButton.classList.add("toggled");
+            teamButton.classList.remove("toggled");
+            playerDiv.removeAttribute("hidden")
+            teamDiv.setAttribute("hidden", "true");
+        }
+    }
 
 </script>
 
 
 <h1 style ="color: @textColor">NBA Stat Party</h1>
+<div>
+    <button onclick="toggleTeam()" id="teamButton" class="dropbtn toggled">Search by Team</button>
+    <button onclick="togglePlayer()" id="playerButton" class="dropbtn">Search by Player</button>
+</div>
 <div style="color: @textColor" id="search-for-team">
+    <br />
     <div class="dropdown">
         <button class="dropbtn" id="League">League</button>
         <div class="dropdown-content" id="Leagues">
@@ -211,7 +244,9 @@
         </div>
     </div>
 </div>
-<div id="search-for-player">
+<div id="search-for-player" hidden>
+    <br />
+    <h4 style="color: @textColor">Player</h4>
     <form method="get" action="/players/search">
         <label style="color: @textColor" for="Name">Name: </label>
         <input style="background-color: @upColor; color: @textColor" type="text" name="Name" id="Name" required />
