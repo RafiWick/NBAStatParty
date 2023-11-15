@@ -7,6 +7,28 @@
     string downColor = ViewData["TableDownColor"] as string;
 }
 @model List<Player>
+
+<script>
+    var nav = document.getElementById('navbar');
+    nav.style.backgroundColor = '@upColor';
+</script>
+
+<style>
+    /* Dropdown Button */
+    
+    #text1{
+        color:@textColor;
+    }
+
+    #text2{
+        color: @textColor;
+    }
+
+    #text3{
+        color: @textColor;
+    }
+</style>
+
 <h1>
     <form method="get" action="/players/search">
         <label style="color: @textColor" for="Name">Name: </label>
