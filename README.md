@@ -58,3 +58,4 @@ Level up is solo school project ideated, designed, and developed in 8 days by
 ## Next Steps
 * I have much more statistics per season than fit on the player statistics table on the player show page. To display the rest of the stats to users I need to add buttons that will toggle different sets of collumns to be displayed in the table.
 * For some teams the primary and secondary colors do not have enough contrast be background and text colors. To make my app more accessable I need to set up a check that either confirms the colors have enough contrast or modifies the colors in some way to ensure proper contrast and readability.
+* There is only one global set of favorites. in order to deploy this application or have more than one user on a device I will need to add users. For simplicity and security I plan on using Identity Framework to add user accounts and the auth that goes with them.
