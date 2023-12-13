@@ -42,7 +42,7 @@
 6. Once loaded you can begin exploring the world of basketball statistics.
 
 ## Context
-Level up is solo school project ideated, designed, and developed in 8 days by
+NBAStatParty is a solo school project ideated, designed, and developed in 8 days by
 | <img src="https://github.com/RafiWick.png?"> |
 | :----: |
 | Rafi Wick |
