@@ -1,0 +1,210 @@
+﻿@using Newtonsoft.Json;
+@using StackExchange.Redis;
+@model Dictionary<string, LiveGame>
+@{
+    bool toggle = true;
+    string color = "";
+    string backgroundColor = ViewData["BackgroundColor"] as string;
+    string textColor = ViewData["TextColor"] as string;
+    string upColor = ViewData["TableUpColor"] as string;
+    string downColor = ViewData["TableDownColor"] as string;
+    string loadedEventsJson = JsonConvert.SerializeObject(Model.SelectMany(g => g.Value.Entries).Select(e => e["id"]));
+    string games = JsonConvert.SerializeObject(Model.Select(m => m.Key));
+}
+
+<script>
+    function hideNonScoringPlays(){
+        const nonScoringPlays = document.getElementsByClassName("scoring:0");
+        for(var nonScoringPlay of nonScoringPlays){
+            nonScoringPlay.hidden = true;
+        }
+        document.getElementById("hideToggle").hidden = true;
+        document.getElementById("showToggle").hidden = false;
+    }
+    function showNonScoringPlays() {
+        const nonScoringPlays = document.getElementsByClassName("scoring:0");
+        for (var nonScoringPlay of nonScoringPlays) {
+            nonScoringPlay.hidden = false;
+        }
+        document.getElementById("hideToggle").hidden = false;
+        document.getElementById("showToggle").hidden = true;
+    }
+    var nav = document.getElementById('navbar');
+    nav.style.backgroundColor = '@upColor';
+    document.body.style.backgroundColor = '@backgroundColor';
+
+    async function getGameUpdates(events, gamesString){
+        const url = "/livegames/update";
+        const request = new Request(url, {
+            method: "POST",
+            body: events
+        })
+        var eventsArray = JSON.parse(events);
+        try{
+            const res = await fetch(request).then(res =>{ return res.json()});
+            console.log(res);
+            const games = JSON.parse(gamesString);
+            for (game of games){
+                var gamediv = document.createElement('div');
+                var firstEvent = true;
+                var color = "down";
+                if(Object.keys(res[game]['Entries']).length % 2 === 0){
+                    var color = 'up';
+                }
+                for(entry of res[game]['Entries']){
+                    var div = document.createElement('div');
+                    var id = "";
+                    var awayPoints = "";
+                    var homePoints = "";
+                    var clock = "";
+                    var period = "";
+                    var description = "";
+                    var attribution = "";
+                    var eventType = "";
+                    for(value of entry.Values){
+                        if(value.Name === 'id') id = value.Value;
+                        else if(value.Name === 'away points') awayPoints = value.Value;
+                        else if (value.Name === 'home points') homePoints = value.Value;
+                        else if (value.Name === 'clock') clock = value.Value;
+                        else if (value.Name === 'period') period = value.Value;
+                        else if (value.Name === 'description') description = value.Value;
+                        else if (value.Name === 'attribution') attribution = value.Value;
+                        else if (value.Name === 'event type') eventType = value.Value;
+                    }
+
+                    if(firstEvent){
+                        var gameSummary = document.getElementById('head:' + game);
+                        gameSummary.innerHTML = "<h4>" + clock +" - " + period + "</h4> <h4>" + awayPoints + " - " + homePoints + "</h4>";
+                        firstEvent = false;
+                    }
+
+                    if(attribution != ""){
+                        div.innerHTML = "<p>" + eventType + " by " + attribution + "</p> <p>" + description + "</p> <p style=\"margin-bottom: 0;\">" + awayPoints + " - " + homePoints + " " + clock + " - " + period + "</p>"; 
+                    }else{
+                        div.innerHTML = "<p>" + eventType + "</p> <p>" + description + "</p> <p style=\"margin-bottom: 0;\">" + awayPoints + " - " + homePoints + " " + clock + " - " + period + "</p>";
+
+                    }
+                    div.classList.add(res[game]["Home"]["Alias"]);
+                    div.classList.add(color);
+                    div.classList.add("event");
+                    eventsArray.push(id);
+                    if(color === "up"){
+                        color = 'down';
+                    }else{
+                        color = 'up';
+                    }
+                    gamediv.append(div);
+                }
+                document.getElementById("body:" + game).prepend(gamediv);
+            }
+            await new Promise(r => setTimeout(r, 1000));
+            await getGameUpdates(JSON.stringify(eventsArray), gamesString);    
+        }
+        catch{
+            await new Promise(r => setTimeout(r, 1000));
+            await getGameUpdates(events, gamesString); 
+        }        
+    }
+    window.onload = function(){
+        getGameUpdates('@loadedEventsJson', '@games')
+    }
+</script>
+@foreach(var game in Model.Values)
+{
+    <style>
+        .@(game.Home.Alias).up{
+            color: @game.Home.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
+            background-color: @game.Home.Colors.FirstOrDefault(c => c.Type == "primary").Up();
+            margin-bottom: 0;
+        }
+        .@(game.Home.Alias).down{
+            color: @game.Home.Colors.FirstOrDefault(c => c.Type == "secondary").Hex;
+            background-color: @game.Home.Colors.FirstOrDefault(c => c.Type == "primary").Down();
+            margin-bottom: 0;
+        }
+    </style>
+}
+<style>
+    #text1 {
+        color: @textColor;
+    }
+
+    #text2 {
+        color: @textColor;
+    }
+
+    #text3 {
+        color: @textColor;
+    }
+
+    #text4 {
+        color: @textColor;
+    }
+    .gamebody{
+        height: 300px;
+        border: 1px solid;
+        overflow: scroll;
+        scrollbar-width: thin;
+    }
+    .gamehead{
+        border: 1px solid;
+        text-align: center;
+    }
+    .game{
+        margin-bottom: 15px;
+    }
+    .event p{
+         margin-left:10px
+    }
+</style>
+<div id="test"></div>
+<button onclick="getGameUpdates('@loadedEventsJson', '@games')" style="background-color: @upColor; color: @textColor">Start</button>
+<h1 style="color: @textColor">Live Games</h1>
+<div class="row">
+    @foreach(var game in Model.Values)
+    {
+        <div class="game col-6 @game.Channel">
+            <div class="gamehead" style="background-color: @game.Home.Colors.FirstOrDefault(c => c.Type == "primary").Hex; color:@game.Home.Colors.FirstOrDefault(c => c.Type == "secondary").Hex">
+                <h3>@game.Away.Alias at @game.Home.Alias</h3>
+                <span id="head:@game.Channel">
+                    @if (game.Entries.Any())
+                    {
+                        <h4>@game.Entries.Peek()["clock"] - @game.Entries.Peek()["period"]</h4>
+                        <h4>@($"{game.Entries.Peek()["away points"]} - {game.Entries.Peek()["home points"]}")</h4>
+                    }
+                    else
+                    {
+                        <h4>upcoming</h4>
+                    }
+                </span>
+            </div>
+            <div class="gamebody @game.Channel" id="body:@game.Channel">
+                @{toggle = true;}
+                @foreach (var evnt in game.Entries)
+                {
+                    @if (toggle)
+                    {
+                        color = "up";
+                        toggle = false;
+                    }
+                    else
+                    {
+                        color = "down";
+                        toggle = true;
+                    }
+                    <div class="event scoring:@evnt["scoring"] @color @game.Home.Alias">
+                        <p>
+                            <span>@evnt["event type"]</span>
+                            @if (evnt["attribution"] != "")
+                            {
+                                <span>by @evnt["attribution"]</span>
+                            }
+                        </p>
+                        <p>@evnt["description"]</p>
+                        <p style="margin-bottom: 0;">@evnt["away points"] - @evnt["home points"]  @evnt["clock"] - @evnt["period"]</p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
